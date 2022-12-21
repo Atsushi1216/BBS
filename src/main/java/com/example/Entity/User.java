@@ -1,12 +1,15 @@
 package com.example.Entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -41,6 +44,9 @@ public class User {
 
 	@Column(name = "updated_date", insertable = false)
 	private Timestamp updatedDate;
+
+	@OneToMany(mappedBy = "user", cascade =  CascadeType.ALL)
+	private List<Message> message;
 
 	public int getId() {
 		return id;

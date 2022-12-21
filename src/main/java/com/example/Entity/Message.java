@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,11 +25,15 @@ public class Message {
 	@Column(name = "text")
 	private String text;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date", insertable = false, updatable = false)
 	private Timestamp createdDate;
 
-	@Column(name = "updated_date")
+	@Column(name = "updated_date", insertable = false)
 	private Timestamp updatedDate;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(insertable = false, updatable = false, name="user_id")
+	private User user;
 
 	public int getId() {
 		return id;
@@ -69,5 +75,11 @@ public class Message {
 		this.updatedDate = updatedDate;
 	}
 
+	public User getUser() {
+		return user;
+	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

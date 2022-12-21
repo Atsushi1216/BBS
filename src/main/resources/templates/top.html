@@ -2,9 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>TOP</title>
 </head>
 <body>
-<h1>hello</h1>
+	<th:block th:if="${loginUser != null}">
+		<div>
+			<h4><th:block th:text="${loginUser.name}"></th:block>さん</h4>
+		</div>
+		<div>
+			<a href="/logout">ログアウト</a>
+		</div>
+	</th:block>
+<form th:action="@{/postMessage}" method="post">
+	<label for="text"></label>
+	<input type="text" name="text">
+	<br>
+	<input type="submit" value="つぶやく">
+</form>
+<div th:each="message : ${message}" id="postMessage">
+	<h6 th:text="${message.user.getAccount()}"></h6>
+	<h4 th:text="${message.text}"></h4>
+</div>
+
 </body>
 </html>

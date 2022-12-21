@@ -31,7 +31,7 @@ public class LoginController {
 	public ModelAndView login() {
 		ModelAndView mav = new ModelAndView();
 		User user = new User();
-		session.invalidate();
+
 		mav.addObject("user", user);
 		mav.setViewName("/login");
 		return mav;
@@ -55,11 +55,20 @@ public class LoginController {
 		// User entityのPasswordに変換した値をセットする
 		user.setPassword(strSha256);
 
-
+		// Serviceとメソッド名を同一にし、検索
 		user = userService.getLoginUser(user.getEmail(), strSha256);
 
+		// ユーザ情報をセッション領域へセット
+		session.setAttribute("loginUser", user);
 
 		return new ModelAndView("redirect:/");
+	}
 
+	// ログアウト処理
+	@GetMapping("/logout")
+	public ModelAndView logout() {
+		// セッションを無効化
+		session.invalidate();
+		return new ModelAndView("redirect:/login");
 	}
 }
