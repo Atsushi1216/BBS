@@ -22,6 +22,11 @@
 <div th:each="message : ${message}" id="postMessage">
 	<h6 th:text="${message.user.getAccount()}"></h6>
 	<h4 th:text="${message.text}"></h4>
+	<div th:if="${loginUser.id == message.userId}">
+		<form th:action="@{/delete/{id}(id=${message.id})}" th:method="delete">
+			<input type="submit" value="削除">
+		</form>
+	</div>
 </div>
 
 </body>

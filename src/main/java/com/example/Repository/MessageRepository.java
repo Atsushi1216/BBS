@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.Entity.Message;
 
 @Repository
-public interface MessageRepository extends JpaRepository <Message, String>{
+public interface MessageRepository extends JpaRepository <Message, Integer>{
 
 }
