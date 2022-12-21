@@ -29,10 +29,16 @@ public class User {
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "created_date")
+	/*
+	insertable - カラムをSQLのINSERT文に含むかどうか
+	updatable - カラムをSQLのUPDATE文に含むかどうか
+	2つともdefaultはtrueとなっているため、falseの場合は明示する必要有
+	*/
+
+	@Column(name = "created_date", insertable = false, updatable = false)
 	private Timestamp createdDate;
 
-	@Column(name = "updated_date")
+	@Column(name = "updated_date", insertable = false)
 	private Timestamp updatedDate;
 
 	public int getId() {
