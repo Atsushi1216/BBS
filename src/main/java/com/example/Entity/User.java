@@ -33,6 +33,7 @@ public class User {
 	insertable - カラムをSQLのINSERT文に含むかどうか
 	updatable - カラムをSQLのUPDATE文に含むかどうか
 	2つともdefaultはtrueとなっているため、falseの場合は明示する必要有
+	特に指定しないとnotNull制約違反となってしまい、DBへの登録ができないので注意
 	*/
 
 	@Column(name = "created_date", insertable = false, updatable = false)

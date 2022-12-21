@@ -1,5 +1,65 @@
 package com.example.Controller;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.example.Entity.User;
+import com.example.Service.UserService;
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
+
+@Controller
 public class LoginController {
 
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	HttpSession session;
+
+	// ログイン画面の表示
+	@GetMapping("/login")
+	public ModelAndView login() {
+		ModelAndView mav = new ModelAndView();
+		User user = new User();
+		session.invalidate();
+		mav.addObject("user", user);
+		mav.setViewName("/login");
+		return mav;
+	}
+
+	// ログイン処理
+	@PostMapping("/postLogin")
+	public ModelAndView postLogin(@ModelAttribute("loginUser") User user,
+			@RequestParam(name="password") String password) {
+//		ModelAndView mav = new ModelAndView();
+
+		String rawPassword = user.getPassword();
+
+		Hasher hasher = Hashing.sha256().newHasher();
+		hasher.putString(rawPassword, Charsets.UTF_8);
+		HashCode sha256 = hasher.hash();
+
+		// Hashcode型のsha256をString型に変換
+		String strSha256 = String.valueOf(sha256);
+
+		// User entityのPasswordに変換した値をセットする
+		user.setPassword(strSha256);
+
+
+		user = userService.getLoginUser(user.getEmail(), strSha256);
+
+
+		return new ModelAndView("redirect:/");
+
+	}
 }
