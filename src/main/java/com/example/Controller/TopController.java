@@ -1,9 +1,11 @@
 package com.example.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,13 +57,34 @@ public class TopController {
 	@PostMapping("/postMessage")
 	public ModelAndView postMessage(@RequestParam String text) {
 		// 投稿内容をセットするため、インスタンスを生成
+		ModelAndView mav = new ModelAndView();
 		Message message = new Message();
+		List<String> errorMessages = new ArrayList<String>();
+		String strMessage = String.valueOf(message);
 
 		User user = (User) session.getAttribute("loginUser");
+
+		if (user == null) {
+			mav.setViewName("/login");
+			return mav;
+		}
+
+		if (!(Strings.isBlank(strMessage))) {
+			errorMessages.add("文字を記入せずに投稿はできません");
+		} else if(140 < strMessage.length()) {
+			errorMessages.add("141文字以上は投稿できません");
+		}
 
 		message.setUserId(user.getId());
 		message.setUser(user);
 		message.setText(text);
+
+		//エラーメッセージ数をチェック
+		if (errorMessages.size() != 0) {
+			mav.setViewName("redirect:/");
+			mav.addObject("errorMessages", errorMessages);
+			return mav;
+		}
 
 		messageService.saveMessage(message);
 

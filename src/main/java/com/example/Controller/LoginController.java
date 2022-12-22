@@ -40,6 +40,7 @@ public class LoginController {
 	// ログイン処理
 	@PostMapping("/postLogin")
 	public ModelAndView postLogin(@ModelAttribute("loginUser") User user,
+			@RequestParam(name="email") String email,
 			@RequestParam(name="password") String password) {
 //		ModelAndView mav = new ModelAndView();
 

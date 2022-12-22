@@ -5,6 +5,9 @@
 <title>TOP</title>
 </head>
 <body>
+<th:block th:each="errorMessages : ${errorMessages}">
+	<p class="error" >・<th:block th:text="${errorMessages}"></th:block></p>
+</th:block>
 	<th:block th:if="${loginUser != null}">
 		<div>
 			<h4><th:block th:text="${loginUser.name}"></th:block>さん</h4>

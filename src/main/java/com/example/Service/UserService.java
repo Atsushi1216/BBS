@@ -35,8 +35,8 @@ public class UserService {
 		return user;
 	}
 
-	// ユーザ編集のためにUserのアカウント名を取得
-	public User findUserAccount(String account) {
+	 // ユーザ編集のためにUserのアカウント名を取得
+	 public User findUserAccount(String account) {
 		return userRepository.findByAccount(account);
 	}
 
@@ -44,7 +44,4 @@ public class UserService {
 		return userRepository.findByName(name);
 	}
 
-	public User findUserEmail(String email) {
-		return userRepository.findByEmail(email);
-	}
 }
