@@ -24,9 +24,23 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	// ログインのためemailとpasswordを取得
 	public User getLoginUser(String email, String password) {
 		return userRepository.findByEmailAndPassword(email, password);
 	}
 
+	// ユーザ編集のため1件取得
+	public User findUser(Integer id) {
+		User user = userRepository.findById(id).orElse(null);
+		return user;
+	}
 
+	// ユーザ編集のためにUserのアカウント名を取得
+	public User findUserAccount(String account) {
+		return userRepository.findByAccount(account);
+	}
+
+	public User findUserName(String name) {
+		return userRepository.findByName(name);
+	}
 }

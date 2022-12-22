@@ -10,6 +10,9 @@
 			<h4><th:block th:text="${loginUser.name}"></th:block>さん</h4>
 		</div>
 		<div>
+			<a th:href="@{/setting/{id}(id=${session.loginUser.id})}">ユーザー編集</a>
+		</div>
+		<div>
 			<a href="/logout">ログアウト</a>
 		</div>
 	</th:block>

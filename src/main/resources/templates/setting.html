@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ユーザ編集</title>
 </head>
 <body>
+<h1>ユーザ編集</h1>
+<form th:action="@{/postSetting/{id}(id=${session.loginUser.id})}" th:object="${loginUser}" th:method="put">
+ 	<label for="account">アカウント名: </label>
+	<input type="text" name="account" th:value="${session.loginUser.account}" /><br />
 
+	<label for="name">ユーザー名: </label>
+	<input type="text" name="name" th:value="${session.loginUser.name}"/><br />
+
+	<label for="password">パスワード: </label>
+	<input name="password" type="password" /><br />
+	<!-- 非null対策 -->
+	<input type="submit" value="登録" /><br />
+	<label for="email" selected hidden></label>
+	<input type="text" name="email" th:value="${session.loginUser.email}" selected hidden/><br />
+
+ </form>
 </body>
 </html>
