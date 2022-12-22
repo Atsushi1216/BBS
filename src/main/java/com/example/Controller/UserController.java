@@ -44,21 +44,85 @@ public class UserController {
 
 	// ユーザ登録処理
 	@PostMapping("/postSignup")
-	public ModelAndView postSignup(@ModelAttribute("formModel") User user) {
+	public ModelAndView postSignup(@ModelAttribute("formModel") User user, User existAccount, User existName, User existEmail) {
+
+		ModelAndView mav = new ModelAndView();
+		List<String> errorMessages = new ArrayList<String>();
+
+		String account = user.getAccount();
+
+		if(Strings.isBlank(account)) {
+			errorMessages.add("アカウント名を入力してください");
+		} else if (10 < account.length()) {
+			errorMessages.add("アカウント名は10文字以下にしてください");
+		} else if (existAccount != null) {
+			errorMessages.add("すでにそのアカウント名は使用されています");
+		}
+
+		String name = user.getName();
+
+		if(Strings.isBlank(name)) {
+			errorMessages.add("ユーザー名を入力してください");
+		} else if (10 < name.length()) {
+			errorMessages.add("ユーザー名は10文字以下にしてください");
+		} else if (existName != null) {
+			errorMessages.add("すでにそのユーザー名は使用されています");
+		}
+
+		String email = user.getEmail();
+
+		if (Strings.isBlank(email)) {
+			errorMessages.add("メールアドレスを入力してください");
+		}
+		else if (existEmail != null) {
+			errorMessages.add("そのメールアドレスはすでに使用されています");
+		}
 
 		String rawPassword = user.getPassword();
 
-		Hasher hasher = Hashing.sha256().newHasher();
-		hasher.putString(rawPassword, Charsets.UTF_8);
-		HashCode sha256 = hasher.hash();
+		if (Strings.isBlank(rawPassword)) {
+			errorMessages.add("パスワードを入力してください");
+		} else if (4 > rawPassword.length() || 20 < rawPassword.length()) {
+			errorMessages.add("パスワードは4文字以上20文字以下で入力してください");
+		} else {
+			Hasher hasher = Hashing.sha256().newHasher();
+			hasher.putString(rawPassword, Charsets.UTF_8);
+			HashCode sha256 = hasher.hash();
 
-		// Hashcode型のsha256をString型に変換
-		String strSha256 = String.valueOf(sha256);
+			// Hashcode型のsha256をString型に変換
+			String strSha256 = String.valueOf(sha256);
 
-		// User entityのPasswordに変換した値をセットする
-		user.setPassword(strSha256);
+			// User entityのPasswordに変換した値をセットする
+			user.setPassword(strSha256);
+		}
+
+		// 以下記述でcreateカラムにcurrenttimeを追加
+		// Timestamp型変数の初期値を設定
+		Timestamp createdDate = null;
+		// フォーマットを変数に指定
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		// Date型の変数を指定し、指定したフォーマットを変換
+		Date date = new Date();
+		String strDate = sdf.format(date);
+
+		// Timestamp型へString型で受け取ったdateを変換
+		createdDate = Timestamp.valueOf(strDate);
+		// 編集する情報をセット
+		mav.addObject("loginUser", user);
+
+		// UrlParameterのidとupdateDateを更新するentityにセット
+		user.setCreatedDate(createdDate);
+
+		//エラーメッセージ数をチェック
+		if (errorMessages.size() != 0) {
+			mav.setViewName("/signup");
+			mav.addObject("errorMessages", errorMessages);
+			return mav;
+		}
 
 		userService.saveUser(user);
+
 		return new ModelAndView("redirect:/");
 
 	}
